@@ -1,5 +1,7 @@
 package com.db_conn_course.dao;
 
+import com.db_conn_course.model.Employee;
+
 import java.util.List;
 
 public interface EmployeeDao {

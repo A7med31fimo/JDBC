@@ -1,6 +1,8 @@
 package com.db_conn_course.dao;
 
 import com.db_conn_course.Utiles.utile;
+import com.db_conn_course.model.Employee;
+import com.db_conn_course.model.EmployeeBuilder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,12 +20,16 @@ public class EmployeeDaoImpl implements EmployeeDao {
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Employee employee = new Employee(
-                        resultSet.getString("name"),
-                        resultSet.getInt("id"),
-                        resultSet.getDouble("salary"),
-                        resultSet.getBoolean("gender"),
-                        resultSet.getDate(("birth_date")));
+//                Employee employee = new Employee(
+//                        resultSet.getString("name"),
+//                        resultSet.getInt("id"),
+//                        resultSet.getDouble("salary"),
+//                        resultSet.getBoolean("gender"),
+//                        resultSet.getDate(("birth_date")));
+
+                Employee employee = Employee.builder().id(resultSet.getInt("id")).data(resultSet.getDate(("birth_date")))
+                        .name(resultSet.getString("name")).salary(resultSet.getDouble("salary"))
+                        .gender(resultSet.getBoolean("gender")).build();
                 employees.add(employee);
             }
         } catch (SQLException sq) {
@@ -54,7 +60,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                         resultSet.getDouble("salary"),
                         resultSet.getBoolean("gender"),
                         resultSet.getDate(("birth_date")));
-            }else{
+            } else {
                 return null;
             }
         } catch (SQLException sq) {
@@ -124,6 +130,24 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
     public void delete_by_id(int id) {
+        Connection connection = DBconnection.getConnection();
+
+        if (connection == null) {
+            return;
+        }
+        String query = "DELETE FROM employee where id=?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException sq) {
+            sq.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 }

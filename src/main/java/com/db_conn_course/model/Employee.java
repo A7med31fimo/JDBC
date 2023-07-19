@@ -1,4 +1,4 @@
-package com.db_conn_course.dao;
+package com.db_conn_course.model;
 
 import java.util.Date;
 
@@ -60,6 +60,10 @@ public class Employee {
         this.birth_date = date;
     }
 
+
+    public static EmployeeBuilder builder(){
+        return new EmployeeBuilder();
+    }
     @Override
     public String toString() {
         return "Employee{" +
